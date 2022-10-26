@@ -46,51 +46,26 @@ async function createInitialUsers() {
       password: "hola_cabrones",
       name: "Juan1",
       location: "Mexico",
+      active: "",
     });
     await createUser({
       username: "Pepe",
       password: "ElPepe",
       name: "Pepe",
       location: "USA",
+      active: "",
     });
     await createUser({
       username: "Pancho",
       password: "PanchoVar",
       name: "Pancho",
       location: "Germany",
+      active: "",
     });
 
     console.log("Finished creating users!");
   } catch (error) {
     console.error("Error creating users!");
-    throw error;
-  }
-}
-
-async function updatedUser(id, fields = {}) {
-  //build the set string
-  const setString = Object.keys(fields)
-    .map((key, index) => `"${key}"=$${index + 1}`)
-    .join(", ");
-
-  //return early if this called without fields
-  if (setString.length === 0) {
-    return;
-  }
-
-  try {
-    const result = await client.query(
-      `
-      UPDATE users
-      SET "name"='new name', "location"='new location'
-      WHERE id=2;
-      RETURNING *;
-      `,
-      Object.values(fields)
-    );
-
-    return result;
-  } catch (error) {
     throw error;
   }
 }
@@ -111,14 +86,14 @@ async function testDB() {
   try {
     console.log("Starting to test database...");
 
-    console.log("Calling getAllUsers")
+    console.log("Calling getAllUsers");
     const users = await getAllUsers();
     console.log("Result:", users);
 
-    console.log("Calling updateUser on users[0]")
+    console.log("Calling updateUser on users[0]");
     const updateUserResult = await updateUser(users[0].id, {
       name: "Newname Sogood",
-      location: "Lesterville, KY"
+      location: "Lesterville, KY",
     });
     console.log("Result:", updateUserResult);
 
