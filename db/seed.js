@@ -18,6 +18,8 @@ async function dropTables() {
     await client.query(`
       DROP TABLE IF EXISTS posts;
       DROP TABLE IF EXISTS users;
+      DROP TABLE IF EXISTS post_tags;
+      DROP TABLE IF EXISTS tags;
     `);
 
     console.log("Finished dropping tables!");
@@ -47,6 +49,14 @@ async function createTables() {
         content TEXT NOT NULL,
         active BOOLEAN DEFAULT true
       );
+      CREATE TABLE tags (
+        id, SERIAL PRIMARY KEY
+        name, VARCHAR(255) UNIQUE NOT NULL
+        );
+        CREATE TABLE post_tags (
+          "postId", INTEGER REFERENCES posts(id) UNIQUE NOT NULL
+          "tagId", INTEGER REFERENCES tags(id) UNIQUE NOT NULL
+        );
     `);
 
     console.log("Finished building tables!");
@@ -94,8 +104,7 @@ async function createInitialPosts() {
     await createPost({
       authorId: Peto.id,
       title: "I AM PETO",
-      content:
-        "PETO COMES FROM MEXICO",
+      content: "PETO COMES FROM MEXICO",
     });
 
     await createPost({
@@ -116,6 +125,30 @@ async function createInitialPosts() {
   }
 }
 
+async function createInitialTags() {
+  try {
+    console.log("starting to create tags...");
+
+    const [happy, sad, inspo, catman] = await createInitialTags([
+      "#happy",
+      "#worst-day-ever",
+      "#youcandoanything",
+      "#catmandoeverything",
+    ]);
+
+    const [postOne, postTwo, postThree] = await getAllPosts();
+
+    await addTagsToPost(postOne.id, [happy, inspo]);
+    await addTagsToPost(postTwo.id, [sad, inspo]);
+    await addTagsToPost(postThree.id, [happy, catman, inspo]);
+
+    console.log("Finished creating tags!");
+  } catch (error) {
+    console.log("Error creating tags!");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     client.connect();
@@ -124,6 +157,7 @@ async function rebuildDB() {
     await createTables();
     await createInitialUsers();
     await createInitialPosts();
+    await createInitialTags();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
