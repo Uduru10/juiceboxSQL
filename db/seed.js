@@ -1,4 +1,4 @@
-const {  
+const {
   client,
   createUser,
   updateUser,
@@ -8,8 +8,8 @@ const {
   updatePost,
   getAllPosts,
   getAllTags,
-  getPostsByTagName
-} = require('./index');
+  getPostsByTagName,
+} = require("./index");
 
 async function dropTables() {
   try {
@@ -75,23 +75,29 @@ async function createInitialUsers() {
   try {
     console.log("Starting to create users...");
 
-    await createUser({ 
-      username: 'Honda', 
-      password: 'bertie99',
-      name: 'Honda',
-      location: 'Tokyo, Japn' 
+    await createUser({
+      username: "Honda",
+      password: "bertie99",
+      name: "Honda",
+      location: "Tokyo, Japn",
     });
-    await createUser({ 
-      username: 'Yamaha', 
-      password: '2sandy4me',
-      name: ' Yamaha',
-      location: 'Japn'
+    await createUser({
+      username: "Yamaha",
+      password: "2sandy4me",
+      name: " Yamaha",
+      location: "Japn",
     });
-    await createUser({ 
-      username: 'Ducati',
-      password: 'soglam',
-      name: 'Ducati',
-      location: 'Bolonga, Italy'
+    await createUser({
+      username: "Ducati",
+      password: "soglam",
+      name: "Ducati",
+      location: "Bolonga, Italy",
+    });
+    await createUser({
+      username: "albert",
+      password: "bertie99",
+      name: "Ducati",
+      location: "Bolonga, Italy",
     });
 
     console.log("Finished creating users!");
@@ -110,21 +116,21 @@ async function createInitialPosts() {
       authorId: Honda.id,
       title: "TOKYO IS COOL",
       content: "I am a really reliable motorcycle",
-      tags: ["#happy", "#youcandoanything"]
+      tags: ["#happy", "#youcandoanything"],
     });
 
     await createPost({
       authorId: Yamaha.id,
       title: "japan is cool",
       content: "I am a motorcycle",
-      tags: ["#happy", "#worst-day-ever"]
+      tags: ["#happy", "#worst-day-ever"],
     });
 
     await createPost({
       authorId: Ducati.id,
       title: "ITALY IS COOL",
       content: "I come from italy",
-      tags: ["#happy", "#youcandoanything", "#canmandoeverything"]
+      tags: ["#happy", "#youcandoanything", "#canmandoeverything"],
     });
     console.log("Finished creating posts!");
   } catch (error) {
@@ -142,7 +148,7 @@ async function rebuildDB() {
     await createInitialUsers();
     await createInitialPosts();
   } catch (error) {
-    console.log("Error during rebuildDB")
+    console.log("Error during rebuildDB");
     throw error;
   }
 }
@@ -158,7 +164,7 @@ async function testDB() {
     console.log("Calling updateUser on users[0]");
     const updateUserResult = await updateUser(users[0].id, {
       name: "Harley",
-      location: "US"
+      location: "US",
     });
     console.log("Result:", updateUserResult);
 
@@ -169,13 +175,13 @@ async function testDB() {
     console.log("Calling updatePost on posts[0]");
     const updatePostResult = await updatePost(posts[0].id, {
       title: "New Title",
-      content: "Updated Content"
+      content: "Updated Content",
     });
     console.log("Result:", updatePostResult);
 
     console.log("Calling updatePost on posts[1], only updating tags");
     const updatePostTagsResult = await updatePost(posts[1].id, {
-      tags: ["#youcandoanything", "#redfish", "#bluefish"]
+      tags: ["#youcandoanything", "#redfish", "#bluefish"],
     });
     console.log("Result:", updatePostTagsResult);
 
@@ -197,7 +203,6 @@ async function testDB() {
     throw error;
   }
 }
-
 
 rebuildDB()
   .then(testDB)
