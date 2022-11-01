@@ -10,6 +10,7 @@ const usersRouter = require("./users");
 const postsRouter = require("./posts");
 const tagsRouter = require("./tags");
 //set 'req.user' if possible
+
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer";
   const auth = req.header("Authorization");

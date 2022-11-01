@@ -1,20 +1,18 @@
 const express = require("express");
-const server = express();
-
-//for the tokens 
-require('dotenv').config();
-
-const apiRouter = require("./API");
-server.use("/API", apiRouter);
-
 const morgan = require("morgan");
-server.use(morgan("dev"));
-
-server.use(express.json());
+const server = express();
+const { client } = require("./db");
+const apiRouter = require("./api");
+require("dotenv").config();
+//for the tokens
 
 const PORT = 3000;
-
+client.connect();
 //Middleware
+
+server.use(morgan("dev"));
+server.use("/api", apiRouter);
+server.use(express.json());
 
 server.use((req, res, next) => {
   console.log("<____Body Logger START____>");
@@ -24,8 +22,6 @@ server.use((req, res, next) => {
   next();
 });
 
-const { client } = require("./db");
-client.connect();
 server.listen(PORT, () => {
   console.log("The server is up!", PORT);
 });
